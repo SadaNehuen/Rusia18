@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Grupo(models.Model):
@@ -31,20 +32,35 @@ class Ronda(models.Model):
         return self.nombre
 
 class Resultado(models.Model):
-    goles_local = models.IntegerField(default=None)
-    goles_visitante = models.IntegerField(default=None)
-    penales_local = models.IntegerField(default=None)
-    penales_visitante = models.IntegerField(default=None)
-    ganador_id = models.IntegerField(default=None)
+    goles_local = models.IntegerField(null=True, default=None)
+    goles_visitante = models.IntegerField(null=True, default=None)
+    penales_local = models.IntegerField(null=True, default=None)
+    penales_visitante = models.IntegerField(null=True, default=None)
+    ganador_id = models.IntegerField(null=True, default=None)
 
 class Partido(models.Model):
     fecha = models.DateTimeField()
     sede = models.ForeignKey(Sede, on_delete=None)
     ronda = models.ForeignKey(Ronda, on_delete=None)
-    resultado = models.ForeignKey(Resultado, on_delete=None)
+    resultado = models.ForeignKey(Resultado, on_delete=None, null=True)
     jugado = models.BooleanField(default=False)
+    partido_selecciones = models.ManyToManyField(Seleccion, through='PartidoSeleccion')
 
 class Pronostico(models.Model):
     partido = models.ForeignKey(Partido, on_delete=None)
-    resultado = models.ForeignKey(Resultado, on_delete=None)
+    resultado = models.ForeignKey(Resultado, on_delete=None, null=True)
     puntos = models.IntegerField(default=0)
+    user = models.ForeignKey(User)
+
+class PartidoSeleccion(models.Model):
+    ''' 
+    Modelo y tabla de relacion entre Partido y Selecciones. Cada registro de la tabla PartidoSeleccion tiene:
+        partido_id -> del partido al que está relacionado
+        seleccion_id -> de la seleccion al que está relacinado
+        local -> un booleano que indica si la seleccion_id referida en el partido_id referido es local o no.
+    
+    En la tabla habrá dos regisotrs po
+    '''
+    partido = models.ForeignKey(Partido)
+    seleccion = models.ForeignKey(Seleccion)
+    local = models.BooleanField(default=False)
