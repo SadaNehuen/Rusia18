@@ -7,16 +7,28 @@ from django.db import models
 class Grupo(models.Model):
     letra = models.CharField(max_length=1)
 
+    def __str__(self):
+        return "Grupo " + self.letra
+
 class Seleccion(models.Model):
     nombre = models.CharField(max_length=60)
     img_url = models.CharField(max_length=200)
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.nombre
+
 class Sede(models.Model):
     nombre = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.nombre
+
 class Ronda(models.Model):
     nombre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre
 
 class Resultado(models.Model):
     goles_local = models.IntegerField(default=None)
