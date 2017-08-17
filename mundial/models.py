@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib import auth
+
+
 
 # Create your models here.
 class Grupo(models.Model):
@@ -64,3 +67,4 @@ class PartidoSeleccion(models.Model):
     partido = models.ForeignKey(Partido)
     seleccion = models.ForeignKey(Seleccion)
     local = models.BooleanField(default=False)
+
